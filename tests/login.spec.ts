@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 // Test for login functionality on demoblaze.com
-// to add sign in tests
 let username = "testpolo";
 let password =  "123";
 
@@ -102,3 +101,23 @@ test('successful logout', async ({ page }) => {
     await expect(page.locator('#login2')).toBeVisible();
 });
 
+test('signup with new username', async ({ page }) => {
+    const newUsername = username + Date.now()
+    await page.goto('https://www.demoblaze.com/');
+    await page.locator('#signin2').click();
+    await page.waitForTimeout(1000);
+    await page.locator('#sign-username').fill(newUsername);
+    await page.locator('#sign-password').fill(password);
+    await page.locator('button:has-text("Sign up")').click();
+    page.once('dialog', async dialog => {
+        expect(dialog.message()).toBe('Sign up successful.');
+        await dialog.accept();
+        });
+    await page.locator('#login2').click();
+    await page.waitForTimeout(1000);
+    await page.locator('#loginusername').fill(newUsername);
+    await page.locator('#loginpassword').fill(password);
+    await page.locator('button:has-text("Log in")').click();
+    await page.locator('#nameofuser').waitFor({ state: 'visible', timeout: 10000 });
+    await expect(page.locator('#nameofuser')).toHaveText("Welcome " + newUsername);
+});
