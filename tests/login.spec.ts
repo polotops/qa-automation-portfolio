@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 // Test for login functionality on demoblaze.com
-
+// to add sign in tests
 let username = "testpolo";
 let password =  "123";
 
@@ -101,3 +101,4 @@ test('successful logout', async ({ page }) => {
     await page.locator('#login2').waitFor({ state: 'visible', timeout: 10000 });
     await expect(page.locator('#login2')).toBeVisible();
 });
+
